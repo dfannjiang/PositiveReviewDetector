@@ -9,7 +9,8 @@ def getTopReviews(url, limit=None):
 			Url of first page of reviews of a dealer at 
 		    DealerRater.com. Must start with "https://dealerrater.com".
 		limit  (int): 
-			Number of reviews to return
+			Number of reviews to return.
+			If not provided, all reviews are returned
 
 	Returns (list):
 	    Top "limit" positive reviews for dealer at "url". If "limit" not
@@ -21,6 +22,7 @@ def getTopReviews(url, limit=None):
 	baseUrl =  '/'.join(url.split('/')[:3])
 	reviewObjs = []
 
+	# Only consider the first 5 pages of reviews.
 	reviewPagesToVisit = 5
 	while reviewPagesToVisit > 0:
 
@@ -39,8 +41,8 @@ def getTopReviews(url, limit=None):
 			url = baseUrl + nextPageButton[0].findChildren("a")[0]['href']
 
 
-	# Sort reviews by rank: smaller rank value means review is more positive
-	sortedReviews = sorted(reviewObjs, key=rank)
+	# Sort reviews by rank: higher rank value means review is more positive
+	sortedReviews = sorted(reviewObjs, key=rank, reverse=reverse)
 
 	if limit:
 		return sortedReviews[:limit]
@@ -51,7 +53,7 @@ def getTopReviews(url, limit=None):
 """
 Ranker
 """
-def rank(review):
+def rank(dealerReview):
 	"""
 	Args:
 		review (A Tag object from BeautifulSoup4): 
@@ -60,10 +62,34 @@ def rank(review):
 			https://www.crummy.com/software/BeautifulSoup/bs4/doc/
 
 	Returns (int): 
-		An integer. The lower it is, the more positive a review it is.
+		An integer. The higher it is, the more positive a review it is.
 	"""
-	return -1
+	rank = ratingToRank(dealerReview.overallRating())
+	rank += ratingToRank(dealerReview.customerServiceRating())
+	rank += ratingToRank(dealerReview.qualityOfWorkRating())
+	rank += ratingToRank(dealerReview.friendlinessRating())
+	rank += ratingToRank(dealerReview.pricingRating())
+	rank += ratingToRank(dealerReview.overallExpRating())
+	rank += 1 if dealerReivew.recommendDealer() else 0
+	return rank * numExclamations(dealerReview)
 
 """
-Features
+Features/Helpers
 """
+def ratingToRank(rating):
+	"""
+	Returns (int):
+		Review rank corresponding to a rating.
+		5 (very good) transforms to 2
+		3 (neutral) transforms to 0
+		0 (terrible) transforms to -3
+		etc.
+	"""
+	return rating - 3
+
+def numExclamations(dealerReview):
+	"""
+	Returns (int):
+		The number of exclamations in the review
+	"""
+	return dealerReview.review().count('!')
