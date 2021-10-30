@@ -1,4 +1,5 @@
 from dealerReview import DealerReview 
+from bs4 import BeautifulSoup
 import requests
 import re
 
@@ -49,7 +50,6 @@ def getTopReviews(url, limit=None):
 	else:
 		return sortedReviews
 
-
 """
 Ranker
 """
@@ -71,7 +71,7 @@ def rank(dealerReview):
 	rank += ratingToRank(dealerReview.pricingRating())
 	rank += ratingToRank(dealerReview.overallExpRating())
 	rank += 1 if dealerReivew.recommendDealer() else 0
-	return rank * numExclamations(dealerReview)
+	return rank * max(1, numExclamations(dealerReview))
 
 """
 Features/Helpers
