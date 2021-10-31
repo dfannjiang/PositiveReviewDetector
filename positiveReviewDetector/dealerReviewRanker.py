@@ -105,7 +105,7 @@ def numExclamations(dealerReview):
 	Returns (int):
 		The number of exclamations in the review
 	"""
-	return dealerReview.review().count('!')
+	return dealerReview.reviewText().count('!')
 
 def totalRankOfSubRatings(dealerReview):
 	allRatings = dealerReview.rawBs4Tag() \

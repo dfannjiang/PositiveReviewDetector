@@ -40,6 +40,6 @@ python -m unittest discover .
 
 ## TODOs
 - Implement methods on `DealerReview` to parse sub-category ratings.
-- Refine calculation of "positiveness".
+- Refine calculation of "positiveness", especialy to consider the review's "employees worked with" list and their ratings.
 - Make number of reviews returned and number of pages of reviews considered to be input parameters to the tool. 
 - Cover more edge cases in code and tests.
