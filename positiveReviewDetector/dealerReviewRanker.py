@@ -26,10 +26,10 @@ def getTopReviews(url, limit=None):
 	# Only consider the first 5 pages of reviews.
 	reviewPagesToVisit = 5
 	while reviewPagesToVisit > 0:
-
+		print('Getting reviews from {}...'.format(url))
 		# Get reviews from current page
-		currPage = requets.get(url)
-		soup = BeautifulSoup(page)
+		currPage = requests.get(url)
+		soup = BeautifulSoup(currPage.content, 'html.parser')
 		reviews = soup.find_all("div", class_="review-entry")
 		reviewObjs += [DealerReview(r) for r in reviews]
 
@@ -38,12 +38,12 @@ def getTopReviews(url, limit=None):
 
 		# Get next reviews page to visit
 		nextPageButton = soup.select('div.next.page')
-		if nextPageButton[0] and nextPageButton[0].has_attr('on_click'):
+		if nextPageButton[0] and nextPageButton[0].has_attr('onclick'):
 			url = baseUrl + nextPageButton[0].findChildren("a")[0]['href']
 
 
 	# Sort reviews by rank: higher rank value means review is more positive
-	sortedReviews = sorted(reviewObjs, key=rank, reverse=reverse)
+	sortedReviews = sorted(reviewObjs, key=rank, reverse=True)
 
 	if limit:
 		return sortedReviews[:limit]
@@ -65,12 +65,7 @@ def rank(dealerReview):
 		An integer. The higher it is, the more positive a review it is.
 	"""
 	rank = ratingToRank(dealerReview.overallRating())
-	rank += ratingToRank(dealerReview.customerServiceRating())
-	rank += ratingToRank(dealerReview.qualityOfWorkRating())
-	rank += ratingToRank(dealerReview.friendlinessRating())
-	rank += ratingToRank(dealerReview.pricingRating())
-	rank += ratingToRank(dealerReview.overallExpRating())
-	rank += 1 if dealerReivew.recommendDealer() else 0
+	rank += totalRankOfSubRatings(dealerReview)
 	return rank * max(1, numExclamations(dealerReview))
 
 """
@@ -93,3 +88,19 @@ def numExclamations(dealerReview):
 		The number of exclamations in the review
 	"""
 	return dealerReview.review().count('!')
+
+def totalRankOfSubRatings(dealerReview):
+	allRatings = dealerReview.rawBs4Tag() \
+		.find_all("div", class_="review-ratings-all")[0]
+    
+	totalRank = 0
+	for tag in list(allRatings.children)[3].find_all(class_="rating-static-indv"):
+		totalRank += ratingToRank(
+			dealerReview.extractRatingFromClass(tag['class'])
+		)
+
+	return totalRank
+
+
+
+
