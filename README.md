@@ -38,7 +38,7 @@ Navigate to the `positiveReviewDetector/test` directory and run
 python -m unittest discover .
 ```
 
-## Todos
+## TODOs
 - Implement methods on `DealerReview` to parse sub-category ratings.
 - Refine calculation of "positiveness".
 - Make number of reviews returned and number of pages of reviews considered to be input parameters to the tool. 
