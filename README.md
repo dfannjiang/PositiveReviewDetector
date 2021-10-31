@@ -10,9 +10,9 @@ Thus, the "positiveness" of a review is calculated as follows:
 
 In other words, the calculation is as follows
 ```
-sum(rating - 5 for rating in allRatings) * max(1, num exclamation marks in review)
+sum(rating - 3 for rating in allRatings) * max(1, num exclamation marks in review)
 ```
-where `allRatings` is the list containing the overall rating and the ratings for each of the sub-categories.
+where `allRatings` is a list containing the overall rating and the ratings for each of the sub-categories.
 
 For example, if a review has an overall rating of 4/5, with sub-category ratings of 4/5 for "Customer Service" and 5/5 for "Pricing", and the review has 2 exclamation marks in it, then its overall "positiveness" rating is:
 ```
