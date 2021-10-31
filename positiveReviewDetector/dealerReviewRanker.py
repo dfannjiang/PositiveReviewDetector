@@ -42,6 +42,8 @@ def getTopReviews(url, limit=None):
 			url = baseUrl + nextPageButton[0].findChildren("a")[0]['href']
 
 
+	print()
+	
 	# Sort reviews by rank: higher rank value means review is more positive
 	sortedReviews = sorted(reviewObjs, key=rank, reverse=True)
 
