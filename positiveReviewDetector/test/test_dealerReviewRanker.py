@@ -14,8 +14,7 @@ class TestDealerReviewRanker(unittest.TestCase):
         reviewsBinary.close()
         soup = BeautifulSoup(binary, 'html.parser')
         self.review = DealerReview(soup.find_all("div", class_="review-entry")[0])
-        self.review2 = DealerReview(soup.find_all("div", class_="review-entry")[0])
-        self.review3 = DealerReview(soup.find_all("div", class_="review-entry")[0])
+        self.allReviews = [DealerReview(r) for r in soup.find_all("div", class_="review-entry")]
 
     def test_numExclamations(self):
         self.assertEqual(numExclamations(self.review), 0)
@@ -33,6 +32,12 @@ class TestDealerReviewRanker(unittest.TestCase):
 
     def test_rank(self):
         self.assertEqual(rank(self.review), 10)
+
+    def test_getTopReviews(self):
+        top3 = getTopReviews(self.allReviews, 3)
+        self.assertEqual(top3[0], self.allReviews[4])
+        self.assertEqual(top3[1], self.allReviews[2])
+        self.assertEqual(top3[2], self.allReviews[0])
 
 if __name__ == '__main__':
     unittest.main()

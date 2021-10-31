@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import requests
 import re
 
-def getTopReviews(url, limit=None):
+def getTopReviewsFromUrl(url, limit=None):
 	"""
 	Args:
 		url (string): 
@@ -41,11 +41,27 @@ def getTopReviews(url, limit=None):
 		if nextPageButton[0] and nextPageButton[0].has_attr('onclick'):
 			url = baseUrl + nextPageButton[0].findChildren("a")[0]['href']
 
-
 	print()
+	return getTopReviews(reviewObjs, limit)
+
 	
+
+def getTopReviews(dealerReviews, limit=None):
+	"""
+	Args:
+		dealerReviews (list):
+			A list of DealerReview objects
+		limit (int):
+			Integer of number of reviews to return. If None, all are returned.
+
+	Returns (list):
+	    Top "limit" positive reviews among dealerReviews. If "limit" not
+	    provided, all reviews will be returned. In either case, result
+	    is returned sorted by most positive first.
+	"""
+
 	# Sort reviews by rank: higher rank value means review is more positive
-	sortedReviews = sorted(reviewObjs, key=rank, reverse=True)
+	sortedReviews = sorted(dealerReviews, key=rank, reverse=True)
 
 	if limit:
 		return sortedReviews[:limit]
