@@ -6,7 +6,7 @@ if __name__ == "__main__":
 	try:
 		reviews = getTopReviewsFromUrl(DEALER_URL, 3)
 		print()
-		print("Top 3 overly positive reviews (most positive listed first):")
+		print("Top 3 positive reviews (most positive listed first):")
 		for count, r in enumerate(reviews):
 			print("{}:".format(count+1))
 			print(r)
