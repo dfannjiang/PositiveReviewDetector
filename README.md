@@ -1,5 +1,5 @@
 # Overview
-The following tool outputs the top 3 positive reviews for "McKaig Chevrolet Buick" from [link](DealerRater.com). 
+The following tool outputs the top 3 positive reviews for "McKaig Chevrolet Buick" from [DealerRater](https://www.DealerRater.com). 
 
 ## "Positiveness" calculation
 A review has an overall rating, as well as ratings for different sub-categories such as "Customer Service" and "Pricing". Each of these ratings are out of 5 stars.
@@ -30,7 +30,7 @@ The BeautifulSoup library was used for webscraping, and was installed with:
 ```
 conda install -c anaconda beautifulsoup4
 ```
-See documentation at [link](https://www.crummy.com/software/BeautifulSoup/bs4/doc/). 
+See [bs4 documentation](https://www.crummy.com/software/BeautifulSoup/bs4/doc/)
 
 ## How to run all tests
 Navigate to the `positiveReviewDetector/test` directory and run
